@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 # coding: utf-8
 from tinydb import TinyDB, Query
+from datetime import date
 
 NUMBER_OF_ROUND = 4
 
@@ -8,12 +9,15 @@ db = TinyDB('chess.json')
 
 
 class Player:
-    def __init__(self, name, first_name, sex, birth_date, ranking):
+    def __init__(self, name, first_name, sex, birth_date, rank):
         self.name = name
         self.first_name = first_name
         self.birth_date = birth_date
         self.sex = sex
-        self.ranking = ranking
+        self.rank = rank
+
+    def show_player(self):
+        pass
 
 
 class Tournament:
@@ -65,14 +69,22 @@ class View:
         if name == "":
             return None
         first_name = input("quelle est votre prénom:").lower().capitalize()
-        sex = input("sexe (masc, fem) :")
-        # condition press m ou f
-        birth_date = input("votre date de naissance:")
+        gender = input("genre tapez m(masc, fem) :").lower()
+        while gender not in ['m', 'f']:
+            gender = input("genre (masc, fem) :")
+            if gender == 'm':
+                gender = 'masculin'
+            elif gender == 'f':
+                gender = 'feminin'
+        birth_date = input("votre date de naissance (jj-mm-aaaa) :")
         # formatage
-        ranking = input("votre classement : ")
-        # condition +
+        rank = input("votre classement : ")
+        while rank.isnumeric():
+            rank = input("votre classement : ")
 
-        return name, first_name, sex, birth_date, ranking
+            if rank.isnumeric():
+                continue
+        return name, first_name, gender, birth_date, rank
 
     def pair(self):
         """ """
@@ -83,9 +95,14 @@ class View:
         """ """
         tournament_name = input("quelle est le nom du tournoi :").lower().capitalize()
         tournament_place = input("lieu :").lower().capitalize()
-        tournament_start_date = input("date de début : ")
-        # maintenant ou autre date
-        tournament_end_date = input("date de fin : ")
+        tournament_start_date = input("date de début aujourd'hui tapez a  ou autre date (jj/mm/aaaa) : ")
+        # while tournament_start_date not in ['a' ]:
+        if tournament_start_date == 'a':
+            tournament_start_date = date.today()
+        tournament_end_date = input("date de fin aujourd'hui tapez a (jj/mm/aaaa) : ")
+        if tournament_end_date == 'a':
+            tournament_end_date = date.today()
+
         tournament_turn_number = NUMBER_OF_ROUND
         tournament_round = []
         tournament_list_player = []
